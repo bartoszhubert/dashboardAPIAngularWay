@@ -40,13 +40,17 @@ export class ProductListComponent {
     })
   );
 
+  vm$ = combineLatest([this.products$, this.categories$]).pipe(
+    map(([products, categories]) => ({ products, categories }))
+  );
+
   constructor(
     private productService: ProductService,
     private productCategoryService: ProductCategoryService
   ) {}
 
   onAdd(): void {
-    console.log("Not yet implemented");
+    this.productService.addNewProduct();
   }
 
   onSelected(categoryId: string): void {

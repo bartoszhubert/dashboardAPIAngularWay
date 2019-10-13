@@ -8,7 +8,7 @@ import {
   Subject,
   merge
 } from "rxjs";
-import { catchError, tap, map, scan } from "rxjs/operators";
+import { catchError, tap, map, scan, shareReplay } from "rxjs/operators";
 
 import { Product } from "./product";
 import { Supplier } from "../suppliers/supplier";
@@ -23,7 +23,7 @@ export class ProductService {
   private suppliersUrl = this.supplierService.suppliersUrl;
 
   products$ = this.http.get<Product[]>(this.productsUrl).pipe(
-    tap(data => console.log("Products: ", JSON.stringify(data))),
+    // tap(data => console.log("Products: ", JSON.stringify(data))),
     catchError(this.handleError)
   );
 
@@ -40,11 +40,12 @@ export class ProductService {
         ).name,
         searchKey: [product.productName]
       }))
-    )
+    ),
+    shareReplay(1)
   );
 
-  private selectedProductSubcject = new BehaviorSubject<number>(0);
-  selectedProductAction$ = this.selectedProductSubcject.asObservable();
+  private selectedProductSubject = new BehaviorSubject<number>(1);
+  selectedProductAction$ = this.selectedProductSubject.asObservable();
 
   selectedProduct$ = combineLatest([
     this.productsWithCategory$,
@@ -57,7 +58,8 @@ export class ProductService {
   );
 
   selectedProductChanged(selectedProductId: number): void {
-    this.selectedProductSubcject.next(selectedProductId);
+    console.log(selectedProductId);
+    this.selectedProductSubject.next(selectedProductId);
   }
 
   private productInsertedSubject = new Subject<Product>();
@@ -67,6 +69,22 @@ export class ProductService {
     this.productsWithCategory$,
     this.productInsertedAction$
   ).pipe(scan((acc: Product[], value: Product) => [...acc, value]));
+
+  addNewProduct(product?: Product): void {
+    const newProduct = product || this.fakeProduct();
+    this.productInsertedSubject.next(newProduct);
+  }
+
+  selectedProductSuppliers$ = combineLatest([
+    this.selectedProduct$,
+    this.supplierService.suppliers$
+  ]).pipe(
+    map(([selectedProduct, suppliers]) =>
+      suppliers.filter(supplier =>
+        selectedProduct.supplierIds.includes(supplier.id)
+      )
+    )
+  );
 
   constructor(
     private http: HttpClient,
