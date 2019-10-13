@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from "@angular/core";
 
 import { ProductService } from "../product.service";
-import { catchError, map, filter, tap } from "rxjs/operators";
+import { catchError, map, filter } from "rxjs/operators";
 import { EMPTY, Subject, combineLatest } from "rxjs";
 
 import { Product } from "../product";
@@ -45,8 +45,7 @@ export class ProductDetailComponent {
       product,
       productSuppliers,
       pageTitle
-    })),
-    tap(data => console.log(data))
+    }))
   );
 
   constructor(private productService: ProductService) {}

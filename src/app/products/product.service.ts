@@ -54,11 +54,10 @@ export class ProductService {
     map(([products, selectedCategoryId]) =>
       products.find(product => product.id === selectedCategoryId)
     ),
-    tap(products => console.log("selectedProduct", JSON.stringify(products)))
+    // tap(products => console.log("selectedProduct", JSON.stringify(products)))
   );
 
   selectedProductChanged(selectedProductId: number): void {
-    console.log(selectedProductId);
     this.selectedProductSubject.next(selectedProductId);
   }
 
