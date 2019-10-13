@@ -7,7 +7,6 @@ import { AppData } from "./app-data";
 
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
-import { WelcomeComponent } from "./home/welcome.component";
 import { PageNotFoundComponent } from "./page-not-found.component";
 
 @NgModule({
@@ -17,7 +16,7 @@ import { PageNotFoundComponent } from "./page-not-found.component";
     InMemoryWebApiModule.forRoot(AppData, { delay: 500 }),
     AppRoutingModule
   ],
-  declarations: [AppComponent, WelcomeComponent, PageNotFoundComponent],
+  declarations: [AppComponent, PageNotFoundComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
