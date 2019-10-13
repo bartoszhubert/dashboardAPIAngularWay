@@ -19,7 +19,7 @@ export class ProductListComponent {
   categorySelectedAction$ = this.categorySelectedSubject.asObservable();
 
   products$ = combineLatest([
-    this.productService.productsWithAdd$,
+    this.productService.productsWithCRUD$,
     this.categorySelectedAction$
   ]).pipe(
     map(([products, selectedCategoryId]) =>
@@ -55,5 +55,13 @@ export class ProductListComponent {
 
   onSelected(categoryId: string): void {
     this.categorySelectedSubject.next(+categoryId);
+  }
+
+  onDelete(product: Product): void {
+    this.productService.deleteProduct(product);
+  }
+
+  onUpdate(product: Product): void {
+    this.productService.updateProduct(product);
   }
 }

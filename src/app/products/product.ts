@@ -9,4 +9,12 @@ export interface Product {
   quantityInStock?: number;
   searchKey?: string[];
   supplierIds?: number[];
+  status?: StatusCode;
+}
+
+export enum StatusCode {
+  Unchanged,
+  Added,
+  Deleted,
+  Updated
 }
